@@ -1,8 +1,11 @@
 ---
-development:
+:backtrace: true
+:development:
   :concurrency: 5
-staging:
+:staging:
   :concurrency: 10
+:production:
+  :backtrace: false
 :pidfile: tmp/pids/sidekiq.pid
 :queues:
   - default
