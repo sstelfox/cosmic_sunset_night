@@ -8,6 +8,7 @@ gem 'rack-cache'
 
 gem 'sqlite3'
 gem 'redis-rails'
+gem 'redis-rack-cache'
 
 gem 'sidekiq-scheduler'
 # Needed for sidekiq's web interface
