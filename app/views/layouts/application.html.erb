@@ -19,32 +19,24 @@
     <![endif]-->
   </head>
   <body>
-    <nav class="navbar navbar-default" role="navigation">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="#">Cosmic Sunset Night</a>
+    <div class="navbar navbar-default navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="navbar-brand" href="/sidekiq/">Cosmic Sunset Night</a>
+          <ul class="nav navbar-nav">
+            <li class="<%= "active" if current_page?(root_path) %>"><%= link_to "Home", root_path %></li>
+            <li class="<%= "active" if current_page?(sidekiq_web_path) %>"><%= link_to "Sidekiq Dashboard", sidekiq_web_path %></li>
+          </ul>
+        </div>
       </div>
-
-      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav">
-          <li><%= link_to "Sidekiq Dashboard", sidekiq_web_path %></li>
-        </ul>
-        <ul class="nav navbar-nav navbar-right">
-          <form class="navbar-form navbar-left" role="search" action="#">
-            <div class="form-group">
-              <input type="text" class="form-control" placeholder="Quick Search">
-            </div>
-          </form>
-        </ul>
-      </div>
-    </nav>
+    </div>
 
     <%= yield %>
+
+    <nav class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
+      <div class="container">
+      </div>
+    </nav>
 
     <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
   </body>
