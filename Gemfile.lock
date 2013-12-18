@@ -79,6 +79,8 @@ GEM
       method_source (~> 0.8)
       slop (~> 3.4)
     rack (1.5.2)
+    rack-cache (1.2)
+      rack (>= 0.4)
     rack-protection (1.5.1)
       rack
     rack-test (0.6.2)
@@ -193,6 +195,7 @@ DEPENDENCIES
   jbuilder (~> 1.2)
   jquery-rails
   pry
+  rack-cache
   rails (= 4.0.2)
   redis-rails
   sass-rails (~> 4.0.0)

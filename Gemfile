@@ -4,6 +4,7 @@ source 'https://rubygems.org'
 gem 'foreman'
 
 gem 'rails', '4.0.2'
+gem 'rack-cache'
 
 gem 'sqlite3'
 gem 'redis-rails'

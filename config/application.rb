@@ -24,5 +24,17 @@ module CosmicSunsetNight
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
+
+    redis_base = URI.parse(ENV['REDIS_PROVIDER'])
+    redis_base.path = '/'
+
+    config.cache_store = :redis_store, (redis_base.to_s + '1/cache'), { expires_in: 90.minutes }
+
+    config.session_store(:redis_store)
+
+    config.action_dispatch.rack_cache = {
+      metastore:   (redis_base.to_s + '1/metastore'),
+      entitystore: (redis_base.to_s + '1/entitystore')
+    }
   end
 end
