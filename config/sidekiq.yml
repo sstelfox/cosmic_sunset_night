@@ -1,0 +1,10 @@
+---
+development:
+  :concurrency: 5
+staging:
+  :concurrency: 10
+:pidfile: tmp/pids/sidekiq.pid
+:queues:
+  - default
+  - [high_priority,2]
+  - mail
