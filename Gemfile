@@ -8,7 +8,7 @@ gem 'redis-rails'
 
 gem 'sidekiq'
 # Needed for sidekiq's status web interface
-gem 'sinatra'
+gem 'sinatra', require: false
 gem 'slim'
 #gem 'sidekiq-status'
 
