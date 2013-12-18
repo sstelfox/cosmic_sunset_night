@@ -19,22 +19,28 @@
     <![endif]-->
   </head>
   <body>
-    <div class="navbar navbar-default navbar-fixed-top">
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="navbar-inner">
         <div class="container">
-          <a class="navbar-brand" href="/sidekiq/">Cosmic Sunset Night</a>
           <ul class="nav navbar-nav">
             <li class="<%= "active" if current_page?(root_path) %>"><%= link_to "Home", root_path %></li>
             <li class="<%= "active" if current_page?(sidekiq_web_path) %>"><%= link_to "Sidekiq Dashboard", sidekiq_web_path %></li>
           </ul>
         </div>
       </div>
-    </div>
+    </nav>
 
     <%= yield %>
 
     <nav class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
-      <div class="container">
+      <div class="navbar-inner">
+        <div class="container">
+          <ul class="nav">
+            <li><p class="navbar-text" style="color:white;">CosmicSunsetNight <%= CSN_VERSION %></p></li>
+            <li><p class="navbar-text">&copy; Sam Stelfox 2013</p></li>
+            <li><p class="navbar-text">Time: <%= Time.now.strftime("%H:%M:%S %Z") %></p></li>
+          </ul>
+        </div>
       </div>
     </nav>
 
