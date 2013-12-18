@@ -1,0 +1,7 @@
+---
+test:
+  every: '30s'
+  class: TestWorker
+  queue: default
+  args:
+  description: "This is a test job that just sleeps."

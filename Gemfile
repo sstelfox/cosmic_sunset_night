@@ -8,7 +8,7 @@ gem 'rails', '4.0.2'
 gem 'sqlite3'
 gem 'redis-rails'
 
-gem 'sidekiq'
+gem 'sidekiq-scheduler'
 # Needed for sidekiq's web interface
 gem 'sinatra', require: false
 gem 'slim', require: false
