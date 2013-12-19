@@ -25,7 +25,6 @@ class MtgoxCurrentStatus
       end
     end
     size_map = Hash[metrics.zip(sizes)]
-    puts size_map.inspect
 
     r.multi do
       metrics.each do |k|
