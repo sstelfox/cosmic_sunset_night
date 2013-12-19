@@ -1,5 +1,5 @@
 ---
-mtgox_current:
+current_trade_data:
   every: '10s'
   class: CurrentTradeData
   queue: high_priority

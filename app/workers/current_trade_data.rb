@@ -26,7 +26,7 @@ class CurrentTradeData
     # vwap is the volume weighted average price
     metrics = ['avg', 'buy', 'high', 'last', 'low', 'sell', 'vol', 'vwap']
     metrics.each_with_object(result) do |metric, result|
-      result[metric.to_s] = result[metric]['value']
+      result[metric.to_s] = td[metric]['value']
     end
   end
 
@@ -61,7 +61,7 @@ class CurrentTradeData
   def acquire_redis_lock(lockname, acquire_timeout = 2, lock_timeout = 5)
     lock_name = "lock:#{lockname}"
     aquire_expire = Time.now + acquire_timeout
-    lock_timeout = lock_time.floor
+    lock_timeout = lock_timeout.floor
     lock_id = SecureRandom.uuid
 
     # Attempt to acquire a lock on the specified name
