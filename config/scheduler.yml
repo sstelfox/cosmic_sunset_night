@@ -1,6 +1,6 @@
 ---
 mtgox_current:
-  every: '30s'
+  every: '10s'
   class: CurrentTradeData
   queue: high_priority
   args:
