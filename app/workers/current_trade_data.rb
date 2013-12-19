@@ -7,8 +7,7 @@ class CurrentTradeData
 
   sidekiq_options :retry => false
 
-  #LIMIT = 172800
-  LIMIT = 10
+  LIMIT = 14400
   URL = 'https://data.mtgox.com/api/2/BTCUSD/money/ticker'
 
   RedisLockUnavailable = Class.new(StandardError)
@@ -24,8 +23,9 @@ class CurrentTradeData
   def parse_trade_data(td)
     result = {'time' => td["now"].to_i}
 
-    useful_metrics = ['avg', 'buy', 'high', 'last', 'low', 'sell', 'vol']
-    useful_metrics.each_with_object(result) do |metric, result|
+    # vwap is the volume weighted average price
+    metrics = ['avg', 'buy', 'high', 'last', 'low', 'sell', 'vol', 'vwap']
+    metrics.each_with_object(result) do |metric, result|
       result[metric.to_s] = result[metric]['value']
     end
   end
@@ -38,17 +38,10 @@ class CurrentTradeData
 
     # The following doesn't work as the same price showing up will be grouped
     # together and received the most recently seen version of that price.
-    sizes = @redis.multi do
-      metrics.each do |k|
-        @redis.zcard("mtgox:#{k}")
-      end
-    end
-    size_map = Hash[metrics.zip(sizes)]
-
     @redis.multi do
-      metrics.each do |k|
-        @redis.remrangebyrank("mtgox:#{k}", 0, LIMIT * -1) if size_map[k] >= LIMIT
-        @redis.zadd("mtgox:#{k}", time_stamp, current_data[k]['value'])
+      data.keys.each do |k|
+        @redis.lpush("mtgox:#{k}", data[k])
+        @redis.ltrim("mtgox:#{k}", 0, LIMIT)
       end
     end
 
