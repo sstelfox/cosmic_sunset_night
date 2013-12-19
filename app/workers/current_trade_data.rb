@@ -32,6 +32,7 @@ class CurrentTradeData
 
   def perform
     data = parse_trade_data(get_current_trade_data)
+    data.delete('time')
 
     lock_id = acquire_redis_lock('current_trade_data')
     fail(RedisLockUnavailable, 'current_trade_data') unless lock_id
