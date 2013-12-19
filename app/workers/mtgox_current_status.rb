@@ -14,12 +14,9 @@ class MtgoxCurrentStatus
 
     r = Redis.new(url: ENV['REDIS_PROVIDER'])
     r.multi do
-      redis.zadd('mtgox:avg', time_stamp, current_data['avg']['value_int'])
-      redis.zadd('mtgox:buy', time_stamp, current_data['buy']['value_int'])
-      redis.zadd('mtgox:high', time_stamp, current_data['high']['value_int'])
-      redis.zadd('mtgox:last', time_stamp, current_data['last']['value_int'])
-      redis.zadd('mtgox:low', time_stamp, current_data['low']['value_int'])
-      redis.zadd('mtgox:sell', time_stamp, current_data['sell']['value_int'])
+      ['avg', 'buy', 'high', 'last', 'low', 'sell'].each do |k|
+        redis.zadd("mtgox:#{k}", time_stamp, current_data[k]['value_int'])
+      end
       redis.zadd('mtgox:vol', time_stamp, current_data['vol']['value'])
     end
   end
