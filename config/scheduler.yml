@@ -1,7 +1,7 @@
 ---
-test:
+mtgox_current:
   every: '30s'
-  class: TestWorker
+  class: MtgoxCurrentStatus
   queue: default
   args:
-  description: "This is a test job that just sleeps."
+  description: "Retrieves the current values on MtGox"
