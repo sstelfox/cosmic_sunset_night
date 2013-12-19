@@ -17,16 +17,19 @@ class MtgoxCurrentStatus
 
     r = Redis.new(url: ENV['REDIS_PROVIDER'])
 
+    # The following doesn't work as the same price showing up will be grouped
+    # together and received the most recently seen version of that price.
     sizes = r.multi do
       metrics.each do |k|
-        r.zcard("mtgox:#{h}")
+        r.zcard("mtgox:#{k}")
       end
     end
-    size_map = metrics.zip(sizes.map(&:to_i))
+    size_map = Hash[metrics.zip(sizes)]
+    puts size_map.inspect
 
     r.multi do
       metrics.each do |k|
-        z.remrangebyrank("mtgox:#{k}", 0, LIMIT * -1) if size_map[k] >= LIMIT
+        r.remrangebyrank("mtgox:#{k}", 0, LIMIT * -1) if size_map[k] >= LIMIT
         r.zadd("mtgox:#{k}", time_stamp, current_data[k]['value'])
       end
     end
