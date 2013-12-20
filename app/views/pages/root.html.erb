@@ -1,5 +1,11 @@
 <div class="container">
   <div class="row .col-md-12">
-    <p>Home page!</p>
+    <div id="avg-graph"></div>
   </div>
+  <script>
+    (function() {
+      var gc = new window.GraphClient;
+      gc.draw();
+    })();
+  </script>
 </div>
