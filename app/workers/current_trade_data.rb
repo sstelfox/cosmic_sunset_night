@@ -7,7 +7,7 @@ class CurrentTradeData
 
   sidekiq_options :retry => false
 
-  LIMIT = 14400
+  LIMIT = 28800
   URL = 'https://data.mtgox.com/api/2/BTCUSD/money/ticker'
 
   RedisLockUnavailable = Class.new(StandardError)
