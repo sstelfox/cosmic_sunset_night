@@ -6,6 +6,8 @@ CosmicSunsetNight::Application.routes.draw do
 
   mount Sidekiq::Web, at: '/sidekiq'
 
+  get 'api/v1/trade_data' => 'api/v1#trade_data'
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
