@@ -6,6 +6,6 @@ class Api::V1Controller < ApplicationController
         $redis.lrange("mtgox:#{m}", 0, 100)
       end
     end
-    @time_series = metrics.zip(values)
+    @time_series = Hash[metrics.zip(values)]
   end
 end
