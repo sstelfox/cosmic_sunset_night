@@ -43,6 +43,8 @@ GEM
     coffee-script-source (1.6.3)
     columnize (0.3.6)
     connection_pool (1.2.0)
+    d3js-rails (3.1.6)
+      railties (>= 3.0, < 5.0)
     debugger (1.6.3)
       columnize (>= 0.3.1)
       debugger-linecache (~> 1.2.0)
@@ -193,6 +195,7 @@ DEPENDENCIES
   bcrypt-ruby (~> 3.1.2)
   bootstrap-sass
   coffee-rails (~> 4.0.0)
+  d3js-rails
   debugger
   foreman
   jbuilder (~> 1.2)
