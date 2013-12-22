@@ -12,15 +12,13 @@ class ControlBot < BotBase
       return false
     end
 
-    puts "Starting run net worth: #{net_worth}"
-
     # Randomly perform a transaction, will quietly fail if it's unable to
     # perform the transaction.
     coin_amount = rand(0..MAX_TRADE_SIZE)
     rand(2) == 0 ? purchase(coin_amount) : sell(coin_amount)
 
     puts "Ending run with #{available_btc}BTC and $#{available_usd}"
-    puts "Have an ending run net worth of: $#{net_worth_usd} or #{net_worth_btc}BTC"
+    puts "Ending run net worth of: $#{net_worth_usd} or #{net_worth_btc}BTC"
     puts "And have paid $#{fees_paid} total in fees."
   end
 end
