@@ -43,7 +43,7 @@ class BotBase
   end
 
   def net_worth
-    available_usd + (available_bsd * btc_value / trade_fee)
+    available_usd + (available_btc * btc_value / trade_fee)
   end
 
   def funds_available
