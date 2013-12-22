@@ -1,11 +1,54 @@
 <div class="container">
   <div class="row .col-md-12">
-    <div id="avg-graph"></div>
+    <div id="graph"></div>
   </div>
   <script>
-    (function() {
-      var gc = new window.GraphClient;
-      gc.draw();
-    })();
+    window.drawGraph = function() {
+      var request = new XMLHttpRequest;
+      request.open("GET", "/api/v1/trade_data.json", false);
+      request.send(null);
+
+      // A little error handling in the event something weird happens.
+      if (request.status != 200) {
+        console.log('Failed to load trade data');
+        return false;
+      };
+
+      // Parse our data out of the response
+      var data = JSON.parse(request.responseText);
+      window.data = data;
+
+      // Begin d3js setup
+      var margin = {top: 20, right: 20, bottom: 30, left: 50};
+      var width = 1300 - margin.left - margin.right;
+      var height = 600 - margin.top - margin.bottom;
+
+      var x = d3.scale.linear().domain([0, data.buy.length]).range([0, width]);
+      var y = d3.scale.linear().domain([d3.min(data.buy), d3.max(data.sell)]).range([height, 0]);
+
+      var xAxis = d3.svg.axis().scale(x).orient("bottom");
+      var yAxis = d3.svg.axis().scale(y).orient("left");
+
+      var svg = d3.select("div#graph").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      //svg.datum(data);
+      svg.append("svg:g").attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+      svg.append("svg:g").attr("class", "y axis")
+        .call(yAxis);
+
+      var line = d3.svg.line().x(function(d, i) { return x(i); })
+        .y(function(d) { return y(d); });
+
+      svg.append("svg:path").attr("d", line(data.buy.reverse())).attr("class", "buy line");
+      svg.append("svg:path").attr("d", line(data.sell.reverse())).attr("class", "sell line");
+      svg.append("svg:path").attr("d", line(data.last.reverse())).attr("class", "last line");
+    };
   </script>
 </div>
