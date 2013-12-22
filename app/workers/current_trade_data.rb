@@ -7,7 +7,6 @@ class CurrentTradeData
 
   sidekiq_options :retry => false
 
-  LIMIT = 100800
   URL = 'https://data.mtgox.com/api/2/BTCUSD/money/ticker'
 
   RedisLockUnavailable = Class.new(StandardError)
@@ -21,32 +20,30 @@ class CurrentTradeData
   end
 
   def parse_trade_data(td)
-    result = {'time' => td["now"].to_i}
+    result = {'time' => (td["now"].to_i * 10 ** -6).to_f}
 
     # vwap is the volume weighted average price
     metrics = ['avg', 'buy', 'high', 'last', 'low', 'sell', 'vol', 'vwap']
     metrics.each_with_object(result) do |metric, result|
-      result[metric.to_s] = td[metric]['value']
+      result[metric.to_s] = td[metric]['value'].to_f
     end
   end
 
   def perform
     data = parse_trade_data(get_current_trade_data)
-    data.delete('time')
 
-    lock_id = acquire_redis_lock('current_trade_data')
-    fail(RedisLockUnavailable, 'current_trade_data') unless lock_id
+    time_period = (data["time"].floor - (data["time"].floor % 86400))
+    lock_name = "trade_data:#{time_period}"
+
+    lock_id = acquire_redis_lock(lock_name)
+    fail(RedisLockUnavailable, lock_name) unless lock_id
 
     # The following doesn't work as the same price showing up will be grouped
     # together and received the most recently seen version of that price.
-    @redis.multi do
-      data.keys.each do |k|
-        @redis.lpush("mtgox:#{k}", data[k])
-        @redis.ltrim("mtgox:#{k}", 0, LIMIT)
-      end
-    end
+    @redis.zadd("mtgox:ticker:#{time_period}", data["time"], JSON.generate(data))
+    @redis.sadd("mtgox:ticker:periods", time_period)
 
-    release_redis_lock('current_trade_data', lock_id)
+    release_redis_lock(lock_name, lock_id)
   end
 
   # Acquire a named lock on the Redis instance with a timeout, it will return
