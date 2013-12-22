@@ -12,7 +12,7 @@ class CurrentTradeData
   RedisLockUnavailable = Class.new(StandardError)
 
   def initialize
-    @redis = Redis.new(url: ENV['REDIS_PROVIDER'])
+    @redis = Redis.new(url: ENV['REDIS_PROVIDER'] || 'redis://127.0.0.1')
   end
 
   def get_current_trade_data
