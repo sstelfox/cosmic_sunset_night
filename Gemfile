@@ -10,7 +10,7 @@ gem 'sqlite3'
 gem 'redis-rails'
 gem 'redis-rack-cache'
 
-gem 'sidekiq-scheduler'
+gem 'sidekiq-scheduler', git: 'https://github.com/sstelfox/sidekiq-scheduler.git'
 # Needed for sidekiq's web interface
 gem 'sinatra', require: false
 gem 'slim', require: false
