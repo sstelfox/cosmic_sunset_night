@@ -16,6 +16,13 @@ class BotBase
     @redis.setnx("#{name}:start", Time.now.to_i)
   end
 
+  def clear
+    keys = @redis.keys("#{name}*")
+    @redis.multi do
+      keys.each { |k| @redis.del(k) }
+    end
+  end
+
   # Cache once per run
   def last_data_point
     return @ldp if @ldp
@@ -58,11 +65,11 @@ class BotBase
 
   def purchase(coins)
     gross_cost = coins * btc_value
-    trade_fee = cost * trade_fee
-    net_cost = gross_cost + trade_fee
+    fee = gross_cost * self.trade_fee
+    net_cost = gross_cost + fee
 
     if available_usd >= net_cost
-      @redis.set("#{name}:fees", fees_paid + trade_fee)
+      @redis.set("#{name}:fees", fees_paid + fee)
       @redis.set("#{name}:btc", available_btc + coins)
       @redis.set("#{name}:usd", available_usd - net_cost)
       @redis.lpush("#{name}:trades", "Purchased #{coins} at #{Time.now.iso8601} for #{net_cost}" )
@@ -72,10 +79,10 @@ class BotBase
   def sell(coins)
     if available_btc >= coins
       gross_value = coins * btc_value
-      trade_fee = gross_value * trade_fee
-      net_value = gross_value - trade_fee
+      fee = gross_value * self.trade_fee
+      net_value = gross_value - fee
 
-      @redis.set("#{name}:fees", fees_paid + trade_fee)
+      @redis.set("#{name}:fees", fees_paid + fee)
       @redis.set("#{name}:btc", available_btc - coins)
       @redis.set("#{name}:usd", available_usd + net_value)
       @redis.lpush("#{name}:trades", "Sold #{coins} at #{Time.now.iso8601} for #{net_value}")
