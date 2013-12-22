@@ -54,9 +54,14 @@ class BotBase
     @redis.get("#{name}:fees").to_f
   end
 
-  def net_worth
-    btc = (available_btc * btc_value)
-    available_usd + btc - (btc * trade_fee)
+  def net_worth_usd
+    btc_usd = (available_btc * btc_value)
+    available_usd + btc_usd - (btc_usd * trade_fee)
+  end
+
+  def net_worth_btc
+    usd_btc = (available_usd / btc_value)
+    available_btc + usd_btc - (usd_btc * trade_fee)
   end
 
   def funds_available
