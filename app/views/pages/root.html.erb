@@ -17,6 +17,38 @@
       // Parse our data out of the response
       var data = JSON.parse(request.responseText);
       window.data = data;
+
+      // Color selection
+      var colors = new Array();
+      colors = d3.scale.category10();
+
+      // Display the data and date values at position X
+      var displayDateForPositionX = function(xPosition) {
+        var dateToShow = x.invert(xPosition);
+      };
+
+      // Handle mouse over events
+      var handleMouseOverGraph = function(event) {
+        var mouseX = event.pageX - 90;
+        var mouseY = event.pageY - 34;
+
+        if (mouseX >= 0 && mouseX <= 990 && mouseY >= 0 && mouseY <= 500) {
+          hoverLineGroup.select('line').remove();
+          hoverLineGroup.append('line)
+            .attr('x1', mouseX).attr('x2', mouseX)
+            .attr('y1', 0).attr('y2', height)
+            .style('stroke', 'DarkViolet').style('stroke-width', 0.2);
+          displayDateForPositionX(mouseX);
+        } else {
+          handleMouseOutGraph(event);
+        };
+      };
+
+      // Handler for when the mouse leaves the graph
+      var handleMouseOutGraph = function(event) {
+        hoverLineGroup.select('line').remove();
+        displayDateForPositionX(width - 210);
+      };
     };
   </script>
 </div>
