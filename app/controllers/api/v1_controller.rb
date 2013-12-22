@@ -1,11 +1,6 @@
 class Api::V1Controller < ApplicationController
   def trade_data
-    metrics = ['avg', 'buy', 'high', 'last', 'low', 'sell', 'vol', 'vwap']
-    values = $redis.multi do
-      metrics.each do |m|
-        $redis.lrange("mtgox:#{m}", 0, 1000)
-      end
-    end
-    @time_series = Hash[metrics.zip(values)]
+    date = $redis.sort('mtgox:ticker:periods', {order: 'DESC', limit: [0, 1]}).first
+    @time_series = $redis.zrange("mtgox:ticker:#{date}", 0, -1).map { |i| JSON.parse(i) }
   end
 end
