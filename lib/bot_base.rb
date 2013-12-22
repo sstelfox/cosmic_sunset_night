@@ -39,11 +39,11 @@ class BotBase
   end
 
   def btc_value
-    last_data_point['avg']
+    last_data_point['last']
   end
 
   def net_worth
-    available_usd + (available_bsd * btc_value)
+    available_usd + (available_bsd * btc_value / trade_fee)
   end
 
   def funds_available

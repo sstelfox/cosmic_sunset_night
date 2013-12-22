@@ -5,3 +5,9 @@ current_trade_data:
   queue: high_priority
   args:
   description: "Retrieves the current trade values."
+control_bot:
+  every: '60s'
+  class: ControlBot
+  queue: default
+  args:
+  description: "A baseline trading bot."
