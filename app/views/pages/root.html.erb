@@ -2,21 +2,79 @@
   <div class="row .col-md-12">
     <div id="graph"></div>
   </div>
-  <script>
-    window.drawGraph = function() {
-      var request = new XMLHttpRequest;
-      request.open("GET", "/api/v1/trade_data.json", false);
-      request.send(null);
+  <style type="text/css">
+    .axis path, .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
 
-      // A little error handling in the event something weird happens.
-      if (request.status != 200) {
-        console.log('Failed to load trade data');
-        return false;
+    .line {
+      fill: none;
+      stroke: #000;
+      stroke-width: 0.5px;
+    }
+  </style>
+  <script type="text/javascript">
+    (function() {
+      var drawGraph = function() {
+        var request = new XMLHttpRequest;
+        request.open("GET", "/api/v1/trade_data.json", false);
+        request.send(null);
+
+        // A little error handling in the event something weird happens.
+        if (request.status != 200) {
+          console.log('Failed to load trade data');
+          return false;
+        };
+
+        // Parse our data out of the response
+        var raw_data = JSON.parse(request.responseText);
+        var data = [];
+
+        for (var i = 0; i < raw_data.length; i += 1) {
+          fixed_data = raw_data[i];
+          fixed_data['time'] = new Date(raw_data[i]['time'] * 1000);
+          data.push(fixed_data);
+        }
+
+        var dateFormat = d3.time.format("%X");
+
+        var timeFn = function(d) { return d.time; };
+        var lastFn = function(d) { return d.last; };
+
+        var margin = {top: 0, right: 20, bottom: 20, left: 40};
+        var width = 1200 - margin.left - margin.right;
+        var height = 400 - margin.top - margin.bottom;
+
+        var x = d3.time.scale().domain(d3.extent(data, timeFn)).range([0, width]);
+        var y = d3.scale.linear().domain(d3.extent(data, lastFn)).range([height - 5, 0]);
+
+        var xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(dateFormat);
+        var yAxis = d3.svg.axis().scale(y).orient("left");
+
+        var svg = d3.select("div#graph").append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        svg.append("g").attr("class", "x axis")
+          .attr("transform", "translate(0," + height + ")")
+          .call(xAxis);
+
+        svg.append("g").attr("class", "y axis")
+          .call(yAxis);
+
+        var line = d3.svg.line()
+          .x(function(d) { return x(d.time); })
+          .y(function(d) { return y(d.last); });
+
+        svg.append("path").attr("d", line(data)).attr("class", "line");
       };
 
-      // Parse our data out of the response
-      var data = JSON.parse(request.responseText);
-      window.data = data;
-    };
+      window.onload = drawGraph;
+      window.drawGraph = drawGraph;
+    })();
   </script>
 </div>
