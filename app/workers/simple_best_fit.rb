@@ -1,8 +1,5 @@
 
-# This bot performs a single transaction entirely randomly each time it's run
-# and is intended to be a control. Any other bot with intent should be able to
-# beat this one as it will be treated as the baseline.
-class ControlBot < BotBase
+class SimpleBestFit < BotBase
   MAX_TRADE_SIZE = 0.5 # In BTC
 
   def perform
