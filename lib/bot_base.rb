@@ -8,19 +8,14 @@ class BotBase
 
   def initialize
     @redis = Redis.new(url: ENV['REDIS_PROVIDER'] || 'redis://127.0.0.1')
+  end
 
+  def setup
     # If the values haven't been created yet initialize them
     @redis.setnx("#{name}:btc", 20)
     @redis.setnx("#{name}:usd", 0)
     @redis.setnx("#{name}:fees", 0)
     @redis.setnx("#{name}:start", Time.now.to_i)
-  end
-
-  def clear
-    keys = @redis.keys("#{name}*")
-    @redis.multi do
-      keys.each { |k| @redis.del(k) }
-    end
   end
 
   def last_data_points(count)
@@ -45,7 +40,7 @@ class BotBase
   end
 
   def btc_value
-    last_data_points.first['last']
+    last_data_points(1).first['last']
   end
 
   def fees_paid

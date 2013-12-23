@@ -11,3 +11,9 @@ control_bot:
   queue: default
   args:
   description: "A baseline trading bot."
+pooynomial_bot:
+  every: '60s'
+  class: PolynomialBestFitBot
+  queue: default
+  args:
+  description: "A more advanced trading bot."

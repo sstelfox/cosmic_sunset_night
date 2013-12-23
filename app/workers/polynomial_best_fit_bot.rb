@@ -1,20 +1,26 @@
 
 require 'matrix'
 
-class PolynomialBestFit < BotBase
-  MAX_TRADE_SIZE = 0.5 # In BTC
+class PolynomialBestFitBot < BotBase
+  MAX_TRADE_SIZE = 1.0 # In BTC
+  TRADE_THRESHOLD = 0.10
 
   def perform
+    setup
+
     # Don't do anything and end the run unless there are funds available
     unless funds_available
       @redis.setnx("#{name}:end", Time.now.to_i)
       return false
     end
 
-    # Randomly perform a transaction, will quietly fail if it's unable to
-    # perform the transaction.
     coin_amount = rand(0..MAX_TRADE_SIZE)
-    rand(2) == 0 ? purchase(coin_amount) : sell(coin_amount)
+
+    pf = best_fit_line
+    prediction = pf.call((Time.now + 15).to_f)
+
+    purchase(coin_amount) if prediction >= (btc_value * (1 + trade_fee + TRADE_THRESHOLD))
+    sell(coin_amount) if prediction <= (btc_value * (1 - trade_fee - TRADE_THRESHOLD))
 
     print_report
   end
@@ -39,9 +45,10 @@ class PolynomialBestFit < BotBase
     my = Matrix.column_vector(data_points[:cost])
     betas = ((mx.t * mx).inv * mx.t * my).transpose.to_a[0]
 
-    # TODO: Generate a proc with the beta values generated above that
-    # calculated  a value for a given input
-    # Proc.new { |time| sum = 0; betas.each_with_index { |multiplier, index| multiplier * (time ** index) }}
+    # Create a proc that will represent the polynomial equation that best fits
+    # our data points. This was designed too take a unix timestamp and return
+    # it's best guess at the future.
+    Proc.new { |time| sum = 0; betas.each_with_index { |multiplier, index| sum += multiplier * (time ** index) }; sum }
   end
 end
 

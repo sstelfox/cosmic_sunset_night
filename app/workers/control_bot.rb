@@ -6,6 +6,8 @@ class ControlBot < BotBase
   MAX_TRADE_SIZE = 0.5 # In BTC
 
   def perform
+    setup
+
     # Don't do anything and end the run unless there are funds available
     unless funds_available
       @redis.setnx("#{name}:end", Time.now.to_i)

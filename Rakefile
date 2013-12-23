@@ -4,3 +4,14 @@
 require File.expand_path('../config/application', __FILE__)
 
 CosmicSunsetNight::Application.load_tasks
+
+namespace :bot do
+  desc "Reset all bot counters within the Redis instance"
+  task :reset do
+    keys = $redis.keys('bot:*')
+    $redis.multi do
+      keys.each { |k| $redis.del(k) }
+    end
+  end
+end
+
