@@ -2,10 +2,10 @@
 require 'matrix'
 
 class PolynomialBestFitBot < BotBase
-  DATA_POINTS           = 100
-  MAX_TRADE_SIZE        = 1.0 # In BTC
-  POLYNOMIAL_FIT_DEGREE = 3
-  TRADE_THRESHOLD       = 0.10
+  DATA_POINTS           = 240   # Look at the last hour
+  MAX_TRADE_SIZE        = 1.0   # In BTC
+  POLYNOMIAL_FIT_DEGREE = 5
+  TRADE_THRESHOLD       = 0.05  # Required prediction threshold to make a trade
 
   def perform
     setup
