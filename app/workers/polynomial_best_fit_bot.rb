@@ -3,6 +3,7 @@ require 'matrix'
 
 class PolynomialBestFitBot < BotBase
   MAX_TRADE_SIZE = 1.0 # In BTC
+  POLYNOMIAL_FIT_DEGREE = 3
   TRADE_THRESHOLD = 0.10
 
   def perform
@@ -37,10 +38,8 @@ class PolynomialBestFitBot < BotBase
       o[:cost].push(d['last'])
     end
 
-    polynomial_fit_degree = 2
-
     # Calculate the betas of the regression for the data
-    x_data = data_points[:time].map { |xi| (0..polynomial_fit_degree).map { |pow| (xi ** pow).to_f } }
+    x_data = data_points[:time].map { |xi| (0..POLYNOMIAL_FIT_DEGREE).map { |pow| (xi ** pow).to_f } }
     mx = Matrix[*x_data]
     my = Matrix.column_vector(data_points[:cost])
     betas = ((mx.t * mx).inv * mx.t * my).transpose.to_a[0]
