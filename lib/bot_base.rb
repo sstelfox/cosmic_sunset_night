@@ -58,10 +58,7 @@ class BotBase
   end
 
   def print_report
-    puts "Status Report:"
-    printf("\tCurrent:\t$%0.2f USD,\t$%0.2f BTC\n", available_usd, available_btc)
-    printf("\tNet:\t\t$%0.2f USD,\t$%0.2f BTC\n", net_worth_usd, net_worth_btc)
-    printf("\tFees Paid:\t$%0.2f USD\n", fees_paid)
+    printf "Status Report for %s:\n\tCurrent:\t$%0.2f USD,\t$%0.2f BTC\n\tNet:\t\t$%0.2f USD,\t$%0.2f BTC\n\tFees Paid:\t$%0.2f USD\n", name, available_usd, available_btc, net_worth_usd, net_worth_btc, fees_paid
   end
 
   def funds_available
