@@ -19,7 +19,7 @@ class PolynomialBestFitBot < BotBase
     coin_amount = rand(0..MAX_TRADE_SIZE)
 
     if pf = best_fit_line
-      prediction = pf.call((Time.now + 15).to_f)
+      prediction = pf.call((Time.now + 60).to_f)
 
       purchase(coin_amount) if prediction >= (btc_value * (1 + trade_fee + TRADE_THRESHOLD))
       sell(coin_amount) if prediction <= (btc_value * (1 - trade_fee - TRADE_THRESHOLD))
