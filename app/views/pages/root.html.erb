@@ -32,7 +32,7 @@
         var raw_data = JSON.parse(request.responseText);
         var data = [];
 
-        for (var i = 0; i < raw_data.length; i += 1) {
+        for (var i = 0; i < raw_data.length; i += 5) {
           fixed_data = raw_data[i];
           fixed_data['time'] = new Date(raw_data[i]['time'] * 1000);
           data.push(fixed_data);
@@ -50,7 +50,7 @@
         var x = d3.time.scale().domain(d3.extent(data, timeFn)).range([0, width]);
         var y = d3.scale.linear().domain(d3.extent(data, lastFn)).range([height - 5, 0]);
 
-        var xAxis = d3.svg.axis().scale(x).orient("bottom").tickFormat(dateFormat);
+        var xAxis = d3.svg.axis().scale(x).orient("bottom");// .tickFormat(dateFormat);
         var yAxis = d3.svg.axis().scale(y).orient("left");
 
         var svg = d3.select("div#graph").append("svg")

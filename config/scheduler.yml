@@ -12,7 +12,7 @@ control_bot:
   args:
   description: "A baseline trading bot."
 polynomial_bot:
-  every: '60s'
+  every: '2m'
   class: PolynomialBestFitBot
   queue: default
   args:
