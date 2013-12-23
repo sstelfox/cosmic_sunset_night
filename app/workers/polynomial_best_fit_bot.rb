@@ -2,9 +2,10 @@
 require 'matrix'
 
 class PolynomialBestFitBot < BotBase
-  MAX_TRADE_SIZE = 1.0 # In BTC
+  DATA_POINTS           = 100
+  MAX_TRADE_SIZE        = 1.0 # In BTC
   POLYNOMIAL_FIT_DEGREE = 3
-  TRADE_THRESHOLD = 0.10
+  TRADE_THRESHOLD       = 0.10
 
   def perform
     setup
@@ -17,22 +18,25 @@ class PolynomialBestFitBot < BotBase
 
     coin_amount = rand(0..MAX_TRADE_SIZE)
 
-    pf = best_fit_line
-    prediction = pf.call((Time.now + 15).to_f)
+    if pf = best_fit_line
+      prediction = pf.call((Time.now + 15).to_f)
 
-    purchase(coin_amount) if prediction >= (btc_value * (1 + trade_fee + TRADE_THRESHOLD))
-    sell(coin_amount) if prediction <= (btc_value * (1 - trade_fee - TRADE_THRESHOLD))
+      purchase(coin_amount) if prediction >= (btc_value * (1 + trade_fee + TRADE_THRESHOLD))
+      sell(coin_amount) if prediction <= (btc_value * (1 - trade_fee - TRADE_THRESHOLD))
+    end
 
     print_report
   end
 
   def best_fit_line
     # Get the data
-    dp = last_data_points(25)
+    dp = last_data_points(DATA_POINTS)
     count = dp.size
 
+    return false if count < DATA_POINTS
+
     # Create a collection of our two relevant data points, Time is our
-    # independent variable (x), while y is our dependent variable.
+    # independent variable (x), while cost is our dependent variable (y).
     data_points = dp.each_with_object({time: [], cost: []}) do |d, o|
       o[:time].push(d['time'])
       o[:cost].push(d['last'])
