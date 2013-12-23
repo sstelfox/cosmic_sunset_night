@@ -16,5 +16,18 @@ class SimpleBestFit < BotBase
 
     print_report
   end
+
+  # X are the time periods, Y are the costs
+  def best_fit_line
+    # Get the data
+    dp = last_data_points(25)
+    count = dp.size
+
+    # Create a collection of our two relevant data points
+    data_points = dp.each_with_object({time: [], cost: []}) do |d, o|
+      o[:time].push(d['time'])
+      o[:cost].push(d['last'])
+    end
+  end
 end
 

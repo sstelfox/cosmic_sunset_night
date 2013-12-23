@@ -23,11 +23,9 @@ class BotBase
     end
   end
 
-  # Cache once per run
-  def last_data_point
-    return @ldp if @ldp
+  def last_data_points(count)
     date = @redis.sort('mtgox:ticker:periods', {order: 'DESC', limit: [0, 1]}).first
-    @ldp = JSON.parse(@redis.zrevrange("mtgox:ticker:#{date}", 0, 1).first)
+    @redis.zrevrange("mtgox:ticker:#{date}", 0, count).map { |d| JSON.parse(d) }
   end
 
   def name
@@ -47,7 +45,7 @@ class BotBase
   end
 
   def btc_value
-    last_data_point['last']
+    last_data_points.first['last']
   end
 
   def fees_paid
