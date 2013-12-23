@@ -58,7 +58,8 @@ class BotBase
   end
 
   def print_report
-    printf "Status Report for %s:\n\tCurrent:\t$%0.2f USD,\t$%0.2f BTC\n\tNet:\t\t$%0.2f USD,\t$%0.2f BTC\n\tFees Paid:\t$%0.2f USD\n", name, available_usd, available_btc, net_worth_usd, net_worth_btc, fees_paid
+    printf "Status Report for %s:\n\tCurrent:\t$%0.2f USD,\t$%0.2f BTC\n\tNet:\t\t$%0.2f USD,\t$%0.2f BTC\n\tFees Paid:\t$%0.2f USD\n\tExchange Rate:\t $1 BTC = $%0.2f USD\n",
+      name, available_usd, available_btc, net_worth_usd, net_worth_btc, fees_paid, btc_value
   end
 
   def funds_available
