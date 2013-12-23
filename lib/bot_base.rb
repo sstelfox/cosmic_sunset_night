@@ -64,6 +64,13 @@ class BotBase
     available_btc + usd_btc - (usd_btc * trade_fee)
   end
 
+  def print_report
+    puts "Status Report:"
+    printf("\tCurrent:\t$%0.2fUSD,\t$%0.2fBTC\n", available_usd, available_btc)
+    printf("\tNet:\t$%0.2fUSD,\t$%0.2fBTC\n", net_worth_usd, net_worth_btc)
+    printf("\tFees Paid:\t$%0.2fUSD\n", fees_paid)
+  end
+
   def funds_available
     available_btc > 0 || available_usd > 0
   end
