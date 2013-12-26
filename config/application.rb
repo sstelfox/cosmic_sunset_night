@@ -10,7 +10,7 @@ require "action_mailer/railtie"
 require "sprockets/railtie"
 # require "rails/test_unit/railtie"
 
-require 'bot_base'
+require 'market'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
